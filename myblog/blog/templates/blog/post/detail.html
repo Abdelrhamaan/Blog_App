@@ -1,0 +1,42 @@
+{% extends 'blog/base.html'%}
+{% load blog_tags %}
+{% block title %} {{post.title}} {% endblock %}
+{%block content %} 
+{% comment %} dispalying post details {% endcomment %}
+<h1>{{ post.title }}</h1>
+<p class="date">published {{post.published}} by {{post.author}}</p>
+{% comment %} {{post.body|linebreaks}} {% endcomment %}
+{{post.body|markdown}}
+
+<p>
+  <a href='{% url "blog:post_share" post.id %}'> Share this post </a>
+</p>
+<p>
+  <a href='{% url "blog:post_list" %}'> Return to posts</a>
+</p>
+<h2>Similar Posts </h2>
+<!-- displaying similar posts -->
+{% for post in similar_posts%}
+<p>
+  <a href='{{ post.get_absolute_url }}'>{{ post.title }}</a>
+</p>
+{% empty %}
+<p>There are no any similiar posts yet!</p>
+{% endfor %}
+{% comment %} total number of comments {% endcomment %} 
+{% with comments.count as total_comments %} 
+{{total_comments}} comment{{total_comments|pluralize}} 
+{%endwith %} 
+{% comment %} display all active comments {% endcomment %} 
+{% for comment in comments %}
+<div class="comment">
+  <p class="info">
+    Comment {{forloop.counter}} by {{comment.name}} {{comment.created}}
+  </p>
+  {{comment.body|linebreaks }}
+</div>
+{% empty %}
+<p>there is no comments</p>
+{% endfor %} 
+{% include "blog/post/includes/comment_form.html" %} 
+{% endblock %}

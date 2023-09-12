@@ -1,0 +1,15 @@
+{% extends 'blog/base.html' %} {% block title %}
+<h1>MyBlog</h1>
+{% endblock%} {% block content%} {% for post in posts %}
+<h2>
+  <!-- blog:post_detail === from namespace  -->
+  {% comment %}
+   <a href="{% url 'blog:post_detail' post.id %}"> {{post.title}} </a> 
+  {% endcomment %}
+  <a href="{{ post.get_absolute_url}}"> {{post.title}} </a>
+</h2>
+<p class="date">published {{post.published}} by {{post.author}}</p>
+{{post.body|truncatewords:30|linebreaks}} {% endfor%} 
+<!-- to render page with its post page=posts -->
+{% include "blog/post/pagination.html" with page=page_obj%}
+{% endblock %}
